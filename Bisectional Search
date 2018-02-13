@@ -1,0 +1,50 @@
+salary = []
+
+
+def optimal_savings_rate():
+    current_savings = 0.00
+    semi_annual_salary_raise = 7.00
+    down_payment = 250000.00
+    epsilon = 100
+    high = 1.00
+    low = 0.00
+    count = 0
+    portion_saved = (high + low) / 2
+    annual_salary = float(input("What is your annual salary?"))
+    salary.append(annual_salary)
+    """Lets's check for sufficiency of the person's annual salary."""
+    """Take portion saved as %100. Would it be enough to save for down payment?"""
+    """With a for loop we save each semi years salary to salary list."""
+    """Then check if sum of them is enough to pay down payment."""
+    for i in range(6):
+        annual_salary += (annual_salary * semi_annual_salary_raise * 0.01)
+        salary.append(annual_salary)
+    if (salary[1] + salary[2] + salary[3] + salary[4] + salary[5] + salary[6]) / 2 < down_payment:
+            print("Not enough income to have a saving equivalent to down payment in three years")
+            return "Sorry."
+    else:
+        pass
+    """After being sure about the sufficiency of the annual salary, we can begin to make a bisectional search."""
+    while abs(current_savings - down_payment) > epsilon:
+        current_savings = 0
+        annual_salary = salary[0]
+        for i in range(0, 36):
+            """Raise the salary each six month. Don't take first month."""
+            if i % 6 == 0 and i != 0:
+                annual_salary += (annual_salary * semi_annual_salary_raise * 0.01)
+            monthly_salary = annual_salary / 12
+            monthly_savings_income = current_savings * 0.04 / 12
+            monthly_savings = (monthly_salary * portion_saved) + monthly_savings_income
+            current_savings += monthly_savings
+        if current_savings < down_payment:
+            low = portion_saved
+        if current_savings > down_payment:
+            high = portion_saved
+        portion_saved = (high + low) / 2
+        count += 1
+    print("The proper saving portion would be really close to {}.Binary "
+          "step count = {}".format(round(portion_saved, 4), count))
+
+
+optimal_savings_rate()
+
